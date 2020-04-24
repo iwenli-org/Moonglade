@@ -2,12 +2,123 @@
     ignore: []
 });
 
+var emptyGuid = '00000000-0000-0000-0000-000000000000';
+
 function slugify(text) {
     return text
         .toLowerCase()
         .replace(/[^\w ]+/g, '')
         .replace(/ +/g, '-');
 }
+
+function ImageUploader(targetName, hw, imgMimeType) {
+    var imgDataUrl = '';
+
+    this.uploadImage = function (uploadUrl) {
+        if (imgDataUrl) {
+            $(`#btn-upload-${targetName}`).addClass('disabled');
+            $(`#btn-upload-${targetName}`).attr('disabled', 'disabled');
+
+            var rawData = { base64Img: imgDataUrl.replace(/^data:image\/(png|jpeg|jpg);base64,/, '') };
+            $.ajax({
+                type: 'POST',
+                headers: { csrfFieldName: $(`input[name=${csrfFieldName}]`).val() },
+                url: uploadUrl,
+                data: makeCSRFExtendedData(rawData),
+                success: function (data) {
+                    console.info(data);
+                    $(`#${targetName}modal`).modal('hide');
+                    toastr.success('Updated');
+                    d = new Date();
+                    $(`.blogadmin-${targetName}`).attr('src', `/${targetName}?${d.getTime()}`);
+                },
+                error: function (xhr, status, err) {
+                    console.error(err);
+                    toastr.error('Upload failed.');
+                    $(`#btn-upload-${targetName}`).removeClass('disabled');
+                    $(`#btn-upload-${targetName}`).removeAttr('disabled');
+                }
+            });
+        } else {
+            toastr.error('Please select an image');
+        }
+    }
+
+    this.fileSelect = function (evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            var file;
+            if (evt.dataTransfer) {
+                file = evt.dataTransfer.files[0];
+                $(`.custom-file-label-${targetName}`).text(file.name);
+            } else {
+                file = evt.target.files[0];
+            }
+
+            if (!file.type.match('image.*')) {
+                toastr.error('Please select an image file.');
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.onloadend = function () {
+                var tempImg = new Image();
+                tempImg.src = reader.result;
+                tempImg.onload = function () {
+                    var maxWidth = hw;
+                    var maxHeight = hw;
+                    var tempW = tempImg.width;
+                    var tempH = tempImg.height;
+                    if (tempW > tempH) {
+                        if (tempW > maxWidth) {
+                            tempH *= maxWidth / tempW;
+                            tempW = maxWidth;
+                        }
+                    } else {
+                        if (tempH > maxHeight) {
+                            tempW *= maxHeight / tempH;
+                            tempH = maxHeight;
+                        }
+                    }
+
+                    var canvas = document.createElement('canvas');
+                    canvas.width = tempW;
+                    canvas.height = tempH;
+                    var ctx = canvas.getContext('2d');
+                    ctx.drawImage(this, 0, 0, tempW, tempH);
+                    imgDataUrl = canvas.toDataURL(imgMimeType);
+
+                    var div = $(`#${targetName}DropTarget`);
+                    div.html(`<img class="img-fluid" src="${imgDataUrl}" />`);
+                    $(`#btn-upload-${targetName}`).removeClass('disabled');
+                    $(`#btn-upload-${targetName}`).removeAttr('disabled');
+                }
+            }
+            reader.readAsDataURL(file);
+        } else {
+            toastr.error('The File APIs are not fully supported in this browser.');
+        }
+    }
+
+    this.dragOver = function (evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        evt.dataTransfer.dropEffect = 'copy';
+    }
+
+    this.bindEvents = function () {
+        document.getElementById(`${targetName}ImageFile`).addEventListener('change', this.fileSelect, false);
+        var dropTarget = document.getElementById(`${targetName}DropTarget`);
+        dropTarget.addEventListener('dragover', this.dragOver, false);
+        dropTarget.addEventListener('drop', this.fileSelect, false);
+    }
+
+    this.getDataUrl = function () {
+        return imgDataUrl;
+    };
+};
 
 var isPreviewRequired = false;
 
@@ -26,24 +137,31 @@ var postEditor = {
                 plugins: 'advlist autolink hr autosave link image lists charmap print preview hr anchor pagebreak spellchecker searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking save table directionality template paste codesample imagetools',
                 toolbar: 'undo redo | formatselect | fontsizeselect | bold italic strikethrough forecolor backcolor | removeformat | link image codesample media | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | code | fullscreen',
                 paste_data_images: true,
-                images_upload_url: '/image/upload',
+                images_upload_url: '/upload-image',
                 images_upload_credentials: true,
                 content_css: '/css/tinymce-editor-bs-bundle.min.css',
                 codesample_languages: [
+                    { text: 'C#', value: 'csharp' },
+                    { text: 'Bash', value: 'bash' },
                     { text: 'HTML/XML', value: 'markup' },
                     { text: 'JavaScript', value: 'javascript' },
                     { text: 'CSS', value: 'css' },
                     { text: 'PHP', value: 'php' },
                     { text: 'Ruby', value: 'ruby' },
                     { text: 'Python', value: 'python' },
-                    { text: 'Java', value: 'java' },
+                    { text: 'Json', value: 'json' },
                     { text: 'C', value: 'c' },
-                    { text: 'C#', value: 'csharp' },
                     { text: 'C++', value: 'cpp' },
-                    { text: 'Bash', value: 'bash' },
                     { text: 'Visual Basic', value: 'vb' },
                     { text: 'PowerShell', value: 'powershell' }
-                ]
+                ],
+                setup: function (editor) {
+                    editor.on('NodeChange', function (e) {
+                        if (e.element.tagName === "IMG") {
+                            e.element.setAttribute("loading", "lazy");
+                        }
+                    });
+                }
             });
         }
     },
@@ -56,8 +174,8 @@ var postEditor = {
             });
 
             inlineAttachment.editors.codemirror4.attach(simplemde.codemirror, {
-                uploadUrl: '/image/upload',
-                urlText: "![file](/uploads/{filename})",
+                uploadUrl: '/upload-image',
+                urlText: '![file](/uploads/{filename})',
                 onFileUploadResponse: function (xhr) {
                     var result = JSON.parse(xhr.responseText),
                         filename = result[this.settings.jsonFieldName];
@@ -115,7 +233,7 @@ var postEditor = {
             }
         });
 
-        $('#btn-preview').click(function(e) {
+        $('#btn-preview').click(function (e) {
             if ($('form').valid()) {
                 submitForm(e);
                 isPreviewRequired = true;
@@ -296,25 +414,25 @@ var onPageCreateEditFailed = function (context) {
 
 function tryRestartWebsite() {
     var nonce = Math.floor((Math.random() * 128) + 1);
-    ajaxPostWithCSRFToken("shutdown", { nonce }, function () { });
-    $(".btn-restart").text("Wait...");
-    $(".btn-restart").addClass("disabled");
-    $(".btn-restart").attr("disabled", "disabled");
-    startTimer(30, $(".btn-restart"));
+    ajaxPostWithCSRFToken('shutdown', { nonce }, function () { });
+    $('.btn-restart').text('Wait...');
+    $('.btn-restart').addClass('disabled');
+    $('.btn-restart').attr('disabled', 'disabled');
+    startTimer(30, $('.btn-restart'));
     setTimeout(function () {
-        location.href = "/admin/settings";
+        location.href = '/admin/settings';
     }, 30000);
 }
 
 function tryResetWebsite() {
     var nonce = Math.floor((Math.random() * 128) + 1);
-    ajaxPostWithCSRFToken("reset", { nonce }, function () { });
-    $(".btn-reset").text("Wait...");
-    $(".btn-reset").addClass("disabled");
-    $(".btn-reset").attr("disabled", "disabled");
-    startTimer(30, $(".btn-reset"));
+    ajaxPostWithCSRFToken('reset', { nonce }, function () { });
+    $('.btn-reset').text('Wait...');
+    $('.btn-reset').addClass('disabled');
+    $('.btn-reset').attr('disabled', 'disabled');
+    startTimer(30, $('.btn-reset'));
     setTimeout(function () {
-        location.href = "/";
+        location.href = '/';
     }, 30000);
 }
 
@@ -324,10 +442,10 @@ function startTimer(duration, display) {
         minutes = parseInt(timer / 60, 10);
         seconds = parseInt(timer % 60, 10);
 
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
 
-        display.text(minutes + ":" + seconds);
+        display.text(minutes + ':' + seconds);
 
         if (--timer < 0) {
             timer = duration;

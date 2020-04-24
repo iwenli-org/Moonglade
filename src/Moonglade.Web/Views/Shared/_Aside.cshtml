@@ -1,20 +1,20 @@
 ﻿<aside class="col-lg-3 d-none d-lg-block">
     <section class="blog-info-desktop-lg d-none d-lg-block mb-4">
         <div class="card-bkimg-container">
-            <img class="card-bkimg" alt="" src="@Url.Action("Avatar", "Image")" />
+            <img class="card-bkimg" alt="" src="@Url.Action("Avatar", "Assets")" />
         </div>
         <div class="blog-info-photo-text text-center">
             <a asp-controller="CustomPage" asp-action="Index" asp-route-routeName="about">
-                <img src="@Url.Action("Avatar", "Image")"
-                     alt="@BlogConfig.BlogOwnerSettings.Name"
+                <img src="@Url.Action("Avatar", "Assets")"
+                     alt="@BlogConfig.GeneralSettings.OwnerName"
                      class="rounded-circle blogger-head-pic" />
             </a>
             <div>
                 <h3 class="mt-3">
-                    @BlogConfig.BlogOwnerSettings.Name
+                    @BlogConfig.GeneralSettings.OwnerName
                 </h3>
                 <p class="mr-3 ml-3">
-                    @BlogConfig.BlogOwnerSettings.Description
+                    @BlogConfig.GeneralSettings.Description
                 </p>
             </div>
         </div>
@@ -37,6 +37,8 @@
                 <cache expires-after="@TimeSpan.FromMinutes(60)">
                     @await Component.InvokeAsync("HotTags")
                 </cache>
+                <hr />
+                <a asp-controller="Tags" asp-action="Index" class="card-link">All Tags</a>
             </div>
         </div>
     </section>

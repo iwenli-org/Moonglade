@@ -1,0 +1,175 @@
+﻿@{
+    Layout = "_LayoutAdmin";
+}
+@model NavMenuManageViewModel
+
+@section scripts{
+    <script>
+        $(function () {
+            $(".btn-delete").click(function () {
+                var cfm = confirm("Delete Confirmation?");
+                if (cfm) {
+                    deleteMenu($(this).data("menuid"));
+                }
+            });
+
+            $(".btn-edit").click(function () {
+                editMenu($(this).data("menuid"));
+            });
+        });
+
+        function deleteMenu(menuid) {
+            $(`#span-processing-${menuid}`).show();
+            ajaxPostWithCSRFToken("/navmenu/delete", { id: menuid }, function (data) {
+                $(`#tr-${data}`).hide();
+            });
+        }
+
+        function initCreateMenu() {
+            $("#NavMenuEditViewModel_Id").val(emptyGuid);
+            $("#edit-form")[0].reset();
+            $('#editMenuModal').modal();
+        }
+
+        function editMenu(id) {
+            $.get(`/navmenu/edit/${id}`, function (data) {
+                $("#NavMenuEditViewModel_Id").val(data.id);
+                $("#NavMenuEditViewModel_Title").val(data.title);
+                $("#NavMenuEditViewModel_Url").val(data.url);
+                $("#NavMenuEditViewModel_Icon").val(data.icon);
+                $("#NavMenuEditViewModel_DisplayOrder").val(data.displayOrder);
+                if (data.isOpenInNewTab) {
+                    $("#NavMenuEditViewModel_IsOpenInNewTab").prop('checked', 'checked');
+                }
+                $("#editMenuModal").modal();
+            });
+        }
+
+        $(".btn-submit").click(function () {
+            if ($("#edit-form").valid()) {
+                var action = '';
+                var menuId = $("#NavMenuEditViewModel_Id").val();
+                if (menuId == emptyGuid) {
+                    action = "create";
+                }
+                else {
+                    action = "edit";
+                }
+
+                ajaxPostWithCSRFToken(`/navmenu/${action}`,
+                    {
+                        "Id": $("#NavMenuEditViewModel_Id").val(),
+                        "Title": $("#NavMenuEditViewModel_Title").val(),
+                        "Url": $("#NavMenuEditViewModel_Url").val(),
+                        "Icon": $("#NavMenuEditViewModel_Icon").val(),
+                        "DisplayOrder": $("#NavMenuEditViewModel_DisplayOrder").val(),
+                        "IsOpenInNewTab": $('#NavMenuEditViewModel_IsOpenInNewTab').prop('checked')
+                    },
+                    function (data) {
+                        $("#edit-form")[0].reset();
+                        $("#editMenuModal").modal('hide');
+                        window.location.reload();
+                    });
+            }
+        });
+    </script>
+}
+
+<partial name="_SettingsHeader" />
+
+<div class="alert alert-info">
+    To turn on / off system navigation items (Categories / Tags / Archive), edit appsettings.json or override with environment variables.
+</div>
+
+<a class="btn btn-outline-success" href="javascript:initCreateMenu();">
+    <span class="icon-plus"></span>
+    Create
+</a>
+
+@if (null != Model.MenuItems && Model.MenuItems.Any())
+{
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>URL</th>
+                <th>Icon</th>
+                <th>Order</th>
+                <th>Open in New Tab</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.MenuItems.OrderBy(p => p.DisplayOrder))
+            {
+                <tr id="tr-@item.Id">
+                    <td>@item.Title</td>
+                    <td>@item.Url</td>
+                    <td>@item.Icon</td>
+                    <td>@item.DisplayOrder</td>
+                    <td>@item.IsOpenInNewTab</td>
+                    <td>
+                        <a href="javascript:;" data-menuid="@item.Id" class="btn btn-sm btn-primary btn-edit"><span class="icon-pencil"></span></a>
+                        <a href="javascript:;" data-menuid="@item.Id" class="btn btn-sm btn-danger btn-delete"><span class="icon-bin"></span></a>
+                        <span id="span-processing-@item.Id" style="display: none">...</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">No Customized Menus</div>
+}
+
+<div class="modal fade" id="editMenuModal" tabindex="-1" role="dialog" aria-labelledby="editMenuModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editMenuModalLabel">Menu Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form id="edit-form" method="post">
+                <div class="modal-body">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <input type="hidden" asp-for="NavMenuEditViewModel.Id" />
+                    <div class="form-group">
+                        <label asp-for="NavMenuEditViewModel.Title" class="control-label"></label>
+                        <input asp-for="NavMenuEditViewModel.Title" class="form-control" />
+                        <span asp-validation-for="NavMenuEditViewModel.Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NavMenuEditViewModel.Url" class="control-label"></label>
+                        <input asp-for="NavMenuEditViewModel.Url" class="form-control" />
+                        <span asp-validation-for="NavMenuEditViewModel.Url" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NavMenuEditViewModel.Icon" class="control-label"></label>
+                        <input asp-for="NavMenuEditViewModel.Icon" class="form-control" />
+                        <span asp-validation-for="NavMenuEditViewModel.Icon" class="text-danger"></span>
+                        <p class="text-muted">Check <a href="https://github.com/EdiWang/Moonglade-Icons" target="_blank">here</a> for icons</p>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NavMenuEditViewModel.DisplayOrder" class="control-label"></label>
+                        <input asp-for="NavMenuEditViewModel.DisplayOrder" class="form-control" />
+                        <span asp-validation-for="NavMenuEditViewModel.DisplayOrder" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input asp-for="NavMenuEditViewModel.IsOpenInNewTab" class="custom-control-input" type="checkbox">
+                            <label asp-for="NavMenuEditViewModel.IsOpenInNewTab" class="custom-control-label">Open in New Tab</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success btn-submit">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

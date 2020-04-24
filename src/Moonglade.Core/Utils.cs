@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Edi.Practice.RequestResponseModel;
@@ -39,6 +40,72 @@ namespace Moonglade.Core
 
             return "#FFFFFF";
         }
+
+        public static string SterilizeMenuLink(string rawUrl)
+        {
+            bool IsUnderLocalSlash()
+            {
+                // Allows "/" or "/foo" but not "//" or "/\".
+                if (rawUrl[0] == '/')
+                {
+                    // url is exactly "/"
+                    if (rawUrl.Length == 1)
+                    {
+                        return true;
+                    }
+
+                    // url doesn't start with "//" or "/\"
+                    if (rawUrl[1] != '/' && rawUrl[1] != '\\')
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                return false;
+            }
+            
+            string invalidReturn = "#";
+            if (string.IsNullOrWhiteSpace(rawUrl))
+            {
+                return invalidReturn;
+            }
+
+            if (!rawUrl.IsValidUrl())
+            {
+                return IsUnderLocalSlash() ? rawUrl : invalidReturn;
+            }
+            
+            var uri = new Uri(rawUrl);
+            if (uri.IsLoopback)
+            {
+                // localhost, 127.0.0.1
+                return invalidReturn;
+            }
+
+            if (uri.HostNameType == UriHostNameType.IPv4)
+            {
+                // Disallow LAN IP (e.g. 192.168.0.1, 10.0.0.1)
+                if (IsPrivateIP(uri.Host))
+                {
+                    return invalidReturn;
+                }
+            }
+
+            return rawUrl;
+        }
+
+        // Regex.IsMatch(ip, @"(^127\.)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)")
+        // Regex has bad performance, this is better
+        public static bool IsPrivateIP(string ip) => IPAddress.Parse(ip).GetAddressBytes() switch
+        {
+            var x when x[0] == 192 && x[1] == 168 => true,
+            var x when x[0] == 10 => true,
+            var x when x[0] == 127 => true,
+            var x when x[0] == 172 && x[1] >= 16 && x[1] <= 31 => true,
+            _ => false
+        };
 
         public static string GetMonthNameByNumber(int number)
         {
@@ -343,15 +410,23 @@ namespace Moonglade.Core
             return result.ToString();
         }
 
-        public static string ReplaceImgSrc(string rawHtmlContent)
+        public static string AddLazyLoadToImgTag(string rawHtmlContent)
         {
             // Replace ONLY IMG tag's src to data-src
             // Otherwise embedded videos will blow up
 
             if (string.IsNullOrWhiteSpace(rawHtmlContent)) return rawHtmlContent;
             var imgSrcRegex = new Regex("<img.+?(src)=[\"'](.+?)[\"'].+?>");
-            var newStr = imgSrcRegex.Replace(rawHtmlContent, match => match.Value.Replace("src",
-                @"src=""/images/loading.gif"" data-src"));
+            var newStr = imgSrcRegex.Replace(rawHtmlContent, match =>
+            {
+                if (!match.Value.Contains("loading"))
+                {
+                    return match.Value.Replace("src",
+                        @"loading=""lazy"" src");
+                }
+
+                return match.Value;
+            });
             return newStr;
         }
 

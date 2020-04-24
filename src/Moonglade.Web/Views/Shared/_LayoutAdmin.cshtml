@@ -1,5 +1,4 @@
-﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
-@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
 
 @using Moonglade.Core
@@ -24,12 +23,9 @@
     <partial name="_Favicons" />
     <link href="~/css/mooglade-css-bundle.min.css" rel="stylesheet" asp-append-version="true" />
     <script src="~/js/app/app-js-bundle.min.js" asp-append-version="true"></script>
-    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/js/app/admin.js" asp-append-version="true"></script>
     @RenderSection("head", false)
-    <environment include="Production">
-        @Html.Raw(JavaScriptSnippet.FullScript)
-    </environment>
     <link href="~/css/theme/@BlogConfig.GeneralSettings.ThemeFileName" rel="stylesheet" asp-append-version="true" />
 </head>
 <body class="admin-body">
@@ -37,13 +33,13 @@
         <div class="row full-height">
             <aside class="admin-nav full-height col-12 col-sm-3">
                 <div class="admin-avatar d-flex justify-content-center mt-4">
-                    <img src="@Url.Action("Avatar", "Image")"
-                         alt="@BlogConfig.BlogOwnerSettings.Name"
+                    <img src="@Url.Action("Avatar", "Assets")"
+                         alt="@BlogConfig.GeneralSettings.OwnerName"
                          class="rounded-circle blogger-head-pic" />
                 </div>
                 <div class="admin-user-info text-center mt-3 mb-3 text-light">
                     <h4>
-                        @BlogConfig.BlogOwnerSettings.Name
+                        @BlogConfig.GeneralSettings.OwnerName
                     </h4>
                     <p class="small text-moonglade-dark-secondary">@User.Identity.Name</p>
                 </div>
@@ -86,15 +82,16 @@
                 <hr class="admin-nav-divider" />
 
                 <div class="text-center mt-3">
-                    <a href="/" class="btn btn-sm btn-success">
-                        Back to Website
+                    <a href="/" target="_blank" class="btn btn-sm btn-success">
+                        <span class="icon-home"></span> Home
                     </a>
                     <a asp-controller="Admin" asp-action="SignOut" class="btn btn-sm btn-danger">
-                        Sign Out
+                        <span class="icon-enter"></span> Sign Out
                     </a>
                 </div>
                 <p class="text-moonglade-dark-secondary mt-4 small text-center">
-                    Moonglade @Utils.AppVersion
+                    Moonglade @Utils.AppVersion <br />
+                    <a class="link-transparent" href="https://github.com/EdiWang/Moonglade/issues" target="_blank">Issue or Suggestion</a>
                 </p>
             </aside>
             <div class="admin-main full-height pt-4 col-sm col-12">

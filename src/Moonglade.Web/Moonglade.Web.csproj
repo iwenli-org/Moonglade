@@ -13,34 +13,27 @@
   <ItemGroup>
     <PackageReference Include="AspNetCoreRateLimit" Version="3.0.5" />
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.447" />
-    <PackageReference Include="Edi.Blog.Pingback" Version="10.4.4" />
-    <PackageReference Include="Edi.Blog.Pingback.Mvc" Version="10.4.3" />
     <PackageReference Include="Edi.Practice.RequestResponseModel" Version="1.3.4" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.13.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.NLogTarget" Version="2.13.1" />
     <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="3.1.3" />
-    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.96" />
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.76" />
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.11.0" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.1" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.2" />
     <PackageReference Include="NLog" Version="4.7.0" />
-    <PackageReference Include="X.PagedList" Version="8.0.5" />
-    <PackageReference Include="X.PagedList.Mvc.Core" Version="8.0.5" />
+    <PackageReference Include="X.PagedList" Version="8.0.7" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="8.0.7" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Moonglade.Auditing\Moonglade.Auditing.csproj" />
-    <ProjectReference Include="..\Moonglade.Configuration\Moonglade.Configuration.csproj" />
     <ProjectReference Include="..\Moonglade.Core\Moonglade.Core.csproj" />
-    <ProjectReference Include="..\Moonglade.Data\Moonglade.Data.csproj" />
-    <ProjectReference Include="..\Moonglade.HtmlEncoding\Moonglade.HtmlEncoding.csproj" />
     <ProjectReference Include="..\Moonglade.ImageStorage.AzureBlob\Moonglade.ImageStorage.AzureBlob.csproj" />
     <ProjectReference Include="..\Moonglade.ImageStorage.FileSystem\Moonglade.ImageStorage.FileSystem.csproj" />
     <ProjectReference Include="..\Moonglade.ImageStorage\Moonglade.ImageStorage.csproj" />
-    <ProjectReference Include="..\Moonglade.Model\Moonglade.Model.csproj" />
     <ProjectReference Include="..\Moonglade.OpmlFileWriter\Moonglade.OpmlFileWriter.csproj" />
     <ProjectReference Include="..\Moonglade.Setup\Moonglade.Setup.csproj" />
     <ProjectReference Include="..\Moonglade.Web.Authentication\Moonglade.Web.Authentication.csproj" />
-    <ProjectReference Include="..\Moonglade.Web.FaviconGenerator\Moonglade.Web.FaviconGenerator.csproj" />
+    <ProjectReference Include="..\Moonglade.Web.SiteIconGenerator\Moonglade.Web.SiteIconGenerator.csproj" />
     <ProjectReference Include="..\Moonglade.Web.Middleware\Moonglade.Web.Middleware.csproj" />
   </ItemGroup>
 </Project>
