@@ -1,7 +1,7 @@
 ﻿@model IReadOnlyList<Moonglade.Model.PostListItem>
 
 @{
-    ViewBag.TitlePrefix = $"All Posts in {ViewBag.ArchiveInfo}";
+    ViewBag.TitlePrefix = $"{ViewBag.ArchiveInfo} 所有博文";
 }
 
 <h3>
@@ -12,7 +12,7 @@
     @if (!Model.Any())
     {
         <div class="alert alert-warning">
-            No Posts
+            暂无数据
         </div>
     }
     else

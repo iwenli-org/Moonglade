@@ -99,7 +99,7 @@
 @if (null != ViewBag.IsDraftPreview)
 {
     <div class="alert alert-info">
-        This is a preview for draft content.
+        这是草稿内容的预览.
     </div>
 }
 
@@ -115,7 +115,7 @@
                 <time datetime="@Model.PostModel.PubDateUtc.ToString("u")" title="GMT @Model.PostModel.PubDateUtc">@DateTimeResolver.GetDateTimeWithUserTZone(Model.PostModel.PubDateUtc).ToString("MM/dd/yyyy")</time>
                 @if (Model.PostModel.LastModifyOnUtc.HasValue)
                 {
-                    <span>(Edit on @DateTimeResolver.GetDateTimeWithUserTZone(Model.PostModel.LastModifyOnUtc.Value).ToString("MM/dd/yyyy HH:mm"))</span>
+                    <span>(编辑 @DateTimeResolver.GetDateTimeWithUserTZone(Model.PostModel.LastModifyOnUtc.Value).ToString("MM/dd/yyyy HH:mm"))</span>
                 }
                 | @BlogConfig.GeneralSettings.TimeZoneId
             </div>
@@ -126,11 +126,11 @@
                 <time datetime="@Model.PostModel.PubDateUtc.ToString("u")" title="GMT @Model.PostModel.PubDateUtc">@DateTimeResolver.GetDateTimeWithUserTZone(Model.PostModel.PubDateUtc).ToString("MM/dd/yyyy")</time>
                 @if (Model.PostModel.LastModifyOnUtc.HasValue)
                 {
-                    <span>(Edit on @DateTimeResolver.GetDateTimeWithUserTZone(Model.PostModel.LastModifyOnUtc.Value).ToString("MM/dd/yyyy HH:mm"))</span>
+            <span>(编辑 @DateTimeResolver.GetDateTimeWithUserTZone(Model.PostModel.LastModifyOnUtc.Value).ToString("MM/dd/yyyy HH:mm"))</span>
                 }
                 | @BlogConfig.GeneralSettings.TimeZoneId
             </strong>
-            <span class="badge badge-secondary float-right post-hit-number">@Model.PostModel.Hits Reads</span>
+            <span class="badge badge-secondary float-right post-hit-number">@Model.PostModel.Hits 阅读</span>
         </div>
 
         <div class="hidden-print">
@@ -219,7 +219,7 @@
             {
                 <div class="card bg-light comment-form-containter mb-4">
                     <div class="card-header">
-                        Comments
+                        评论
                         <span class="badge badge-secondary float-right">@Model.PostModel.CommentCount</span>
                     </div>
                     <form id="form-comment" asp-controller="Comment" asp-action="NewComment"
@@ -233,16 +233,16 @@
                             <input type="hidden" asp-for="NewCommentViewModel.PostId" />
                             <div class="row form-group">
                                 <div class="col-md-4">
-                                    <input type="text" class="form-control" placeholder="Your Name" asp-for="NewCommentViewModel.Username" />
+                                    <input type="text" class="form-control" placeholder="昵称" asp-for="NewCommentViewModel.Username" />
                                     <span asp-validation-for="NewCommentViewModel.Username" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" class="form-control" placeholder="Email" asp-for="NewCommentViewModel.Email" />
+                                    <input type="text" class="form-control" placeholder="邮箱" asp-for="NewCommentViewModel.Email" />
                                     <span asp-validation-for="NewCommentViewModel.Email" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="comment-md-content form-group">
-                                <textarea asp-for="NewCommentViewModel.Content" class="form-control" cols="60" rows="4" placeholder="Your comments (Markdown supported)" maxlength="1024"></textarea>
+                                <textarea asp-for="NewCommentViewModel.Content" class="form-control" cols="60" rows="4" placeholder="评论内容(支持Markdown)" maxlength="1024"></textarea>
                                 <span asp-validation-for="NewCommentViewModel.Content" class="text-danger"></span>
                             </div>
                             <div class="row">
@@ -254,7 +254,7 @@
                                         <input type="text"
                                                asp-for="NewCommentViewModel.CaptchaCode"
                                                class="form-control"
-                                               placeholder="Captcha Code"
+                                               placeholder="验证码"
                                                autocomplete="off"
                                                minlength="4"
                                                maxlength="4" />
@@ -263,7 +263,7 @@
                                 </div>
                                 <div class="col">
                                     <button id="btn-submit-comment" type="submit" class="btn btn-success float-right">
-                                        Submit
+                                        提交
                                     </button>
                                 </div>
                             </div>
@@ -273,30 +273,30 @@
             }
             else
             {
-                <div class="alert alert-warning">Comment of this post is disabled.</div>
+    <div class="alert alert-warning">该博文已禁用评论.</div>
             }
         }
         else
         {
-            <div class="alert alert-warning">Comment is disabled by blog administrator.</div>
+            <div class="alert alert-warning">博客管理员已禁用评论.</div>
         }
 
         <div id="loadingIndicator" style="display: none;" class="mb-4">
             <div class="progress">
                 <div class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                    <span class="sr-only">Processing...</span>
+                    <span class="sr-only">处理中...</span>
                 </div>
             </div>
         </div>
 
         <div id="thx-for-comment" class="alert alert-warning" style="display: none;">
-            Thanks, your comment is pending approval now. <br />
-            It will show up once blog administrator approved your comment.
+            谢谢，您的评论正在等待审核. <br />
+            博客管理员审核您的评论后才能显示.
         </div>
 
         <div id="thx-for-comment-non-review" class="alert alert-success" style="display: none;">
-            Thanks for your comment. <br />
-            Refresh the page to see your comment.
+            谢谢你的评论. <br />
+            刷新页面以查看您的评论.
         </div>
 
         @if (Model.PostModel.CommentCount > 0)

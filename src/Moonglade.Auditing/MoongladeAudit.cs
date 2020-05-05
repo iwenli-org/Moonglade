@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moonglade.Model;
 using Moonglade.Model.Settings;
+using MySql.Data.MySqlClient;
 
 namespace Moonglade.Auditing
 {
@@ -58,7 +59,8 @@ namespace Moonglade.Auditing
                 var auditEntry = new AuditEntry(eventType, eventId, ui.Username, ui.Ipv4, machineName, message);
 
                 var connStr = _configuration.GetConnectionString(Constants.DbConnectionName);
-                await using var conn = new SqlConnection(connStr);
+                //await using var conn = new SqlConnection(connStr);
+                await using var conn = new MySqlConnection(connStr);
 
                 var sql = @"INSERT INTO AuditLog([EventId],[EventType],[EventTimeUtc],[WebUsername],[IpAddressV4],[MachineName],[Message])
                             VALUES(@EventId, @EventType, @EventTimeUtc, @Username, @IpAddressV4, @MachineName, @Message)";
@@ -79,23 +81,44 @@ namespace Moonglade.Auditing
             try
             {
                 var connStr = _configuration.GetConnectionString(Constants.DbConnectionName);
-                await using var conn = new SqlConnection(connStr);
+                //await using var conn = new SqlConnection(connStr);
+                await using var conn = new MySqlConnection(connStr);
 
-                var sql = @"SELECT al.EventId, 
+                //var sql = @"SELECT al.EventId, 
+                //                   al.EventType, 
+                //                   al.EventTimeUtc, 
+                //                   al.[Message],
+                //                   al.WebUsername as [Username], 
+                //                   al.IpAddressV4, 
+                //                   al.MachineName
+                //            FROM AuditLog al 
+                //            WITH(NOLOCK)
+                //            WHERE 1 = 1 
+                //            AND (@EventType IS NULL OR al.EventType = @EventType)
+                //            AND (@EventId IS NULL OR al.EventId = @EventId)
+                //            ORDER BY al.EventTimeUtc DESC
+                //            OFFSET @Skip ROWS
+                //            FETCH NEXT @Take ROWS ONLY
+
+                //            SELECT COUNT(al.Id)
+                //            FROM AuditLog al
+                //            WHERE 1 = 1
+                //            AND(@EventType IS NULL OR al.EventType = @EventType)
+                //            AND(@EventId IS NULL OR al.EventId = @EventId);";
+
+                var mySql = @"SELECT al.EventId, 
                                    al.EventType, 
                                    al.EventTimeUtc, 
-                                   al.[Message],
-                                   al.WebUsername as [Username], 
+                                   al.Message,
+                                   al.WebUsername as Username, 
                                    al.IpAddressV4, 
                                    al.MachineName
                             FROM AuditLog al 
-                            WITH(NOLOCK)
                             WHERE 1 = 1 
                             AND (@EventType IS NULL OR al.EventType = @EventType)
                             AND (@EventId IS NULL OR al.EventId = @EventId)
                             ORDER BY al.EventTimeUtc DESC
-                            OFFSET @Skip ROWS
-                            FETCH NEXT @Take ROWS ONLY
+                            limit @Skip,@Take;
 
                             SELECT COUNT(al.Id)
                             FROM AuditLog al
@@ -103,7 +126,7 @@ namespace Moonglade.Auditing
                             AND(@EventType IS NULL OR al.EventType = @EventType)
                             AND(@EventId IS NULL OR al.EventId = @EventId);";
 
-                using var multi = await conn.QueryMultipleAsync(sql, new
+                using var multi = await conn.QueryMultipleAsync(mySql, new
                 {
                     eventType,
                     eventId,
@@ -134,7 +157,8 @@ namespace Moonglade.Auditing
                 }
 
                 var connStr = _configuration.GetConnectionString(Constants.DbConnectionName);
-                await using var conn = new SqlConnection(connStr);
+                //await using var conn = new SqlConnection(connStr);
+                await using var conn = new MySqlConnection(connStr);
 
                 var sql = "DELETE FROM AuditLog";
                 int rows = await conn.ExecuteAsync(sql);

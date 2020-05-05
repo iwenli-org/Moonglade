@@ -32,7 +32,7 @@
 
     <section class="top-tags mb-4">
         <div class="card">
-            <div class="card-header">Top Tags</div>
+            <div class="card-header">热门标签</div>
             <div class="card-body">
                 <cache expires-after="@TimeSpan.FromMinutes(60)">
                     @await Component.InvokeAsync("HotTags")
@@ -43,7 +43,7 @@
 
     <section class="cat-list mb-4">
         <div class="card">
-            <div class="card-header">All Categories</div>
+            <div class="card-header">全部分类</div>
             <cache expires-after="@TimeSpan.FromMinutes(60)">
                 @await Component.InvokeAsync("CategoryList")
             </cache>
@@ -53,7 +53,7 @@
     @if (Settings.Value.ShowAdminLoginButton)
     {
         <div class="text-center">
-            <a asp-action="Index" asp-controller="Admin" class="btn btn-sm btn-light">Admin Login</a>
+            <a asp-action="Index" asp-controller="Admin" class="btn btn-sm btn-light">管理入口</a>
         </div>
     }
 </aside>

@@ -40,6 +40,7 @@ using Moonglade.Web.FaviconGenerator;
 using Moonglade.Web.Filters;
 using Moonglade.Web.Middleware.PoweredBy;
 using Polly;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace Moonglade.Web
 {
@@ -128,13 +129,18 @@ namespace Moonglade.Web
 
             services.AddDbContext<MoongladeDbContext>(options =>
                     options.UseLazyLoadingProxies()
-                           .UseSqlServer(_configuration.GetConnectionString(Constants.DbConnectionName), sqlOptions =>
-                               {
-                                   sqlOptions.EnableRetryOnFailure(
-                                       3,
-                                       TimeSpan.FromSeconds(30),
-                                       null);
-                               }));
+                                .UseMySql(_configuration.GetConnectionString(Constants.DbConnectionName), options =>
+                                {
+                                    options.ServerVersion(new Version(8, 0, 18), ServerType.MySql);
+                                })
+                           // .UseSqlServer(_configuration.GetConnectionString(Constants.DbConnectionName), sqlOptions =>
+                           //{
+                           //    sqlOptions.EnableRetryOnFailure(
+                           //        3,
+                           //        TimeSpan.FromSeconds(30),
+                           //        null);
+                           //})
+                           );
         }
 
         public void Configure(
@@ -228,42 +234,41 @@ namespace Moonglade.Web
             app.UseStaticFiles();
             app.UseSession();
 
-            var conn = _configuration.GetConnectionString(Constants.DbConnectionName);
-            var setupHelper = new SetupHelper(conn);
-
-            if (!setupHelper.TestDatabaseConnection(exception =>
+            //var conn = _configuration.GetConnectionString(Constants.DbConnectionName);
+            //var setupHelper = new SetupHelper(conn);
+            //if (!setupHelper.TestDatabaseConnection(exception =>
+            //{
+            //    _logger.LogCritical(exception, $"Error {nameof(SetupHelper.TestDatabaseConnection)}, connection string: {conn}");
+            //}))
+            //{
+            //    app.Run(async context =>
+            //    {
+            //        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            //        await context.Response.WriteAsync("Database connection failed. Please see error log. Application has been stopped.");
+            //        appLifetime.StopApplication();
+            //    });
+            //}
+            //else
             {
-                _logger.LogCritical(exception, $"Error {nameof(SetupHelper.TestDatabaseConnection)}, connection string: {conn}");
-            }))
-            {
-                app.Run(async context =>
-                {
-                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                    await context.Response.WriteAsync("Database connection failed. Please see error log. Application has been stopped.");
-                    appLifetime.StopApplication();
-                });
-            }
-            else
-            {
-                if (setupHelper.IsFirstRun())
-                {
-                    try
-                    {
-                        _logger.LogInformation("Initializing first run configuration...");
-                        setupHelper.InitFirstRun();
-                        _logger.LogInformation("Database setup successfully.");
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogCritical(e, e.Message);
-                        app.Run(async context =>
-                        {
-                            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                            await context.Response.WriteAsync("Error initializing first run, please check error log.");
-                            appLifetime.StopApplication();
-                        });
-                    }
-                }
+                //if (setupHelper.IsFirstRun())
+                //{
+                //    try
+                //    {
+                //        _logger.LogInformation("Initializing first run configuration...");
+                //        setupHelper.InitFirstRun();
+                //        _logger.LogInformation("Database setup successfully.");
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        _logger.LogCritical(e, e.Message);
+                //        app.Run(async context =>
+                //        {
+                //            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                //            await context.Response.WriteAsync("Error initializing first run, please check error log.");
+                //            appLifetime.StopApplication();
+                //        });
+                //    }
+                //}
 
                 app.UseIpRateLimiting();
                 app.MapWhen(context => context.Request.Path == "/ping", builder =>

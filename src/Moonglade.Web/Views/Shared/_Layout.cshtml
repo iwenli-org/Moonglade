@@ -69,7 +69,7 @@
                         <li id="navbar-dropdown-post" class="nav-item @("Category" == currentController ? "dropdown active" : "dropdown")">
                             <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown">
                                 <span class="icon-book"></span>
-                                <strong>Categories</strong>
+                                <strong>分类</strong>
                             </a>
                             <cache expires-after="@TimeSpan.FromMinutes(60)">
                                 @await Component.InvokeAsync("CategoryMenu")
@@ -79,20 +79,20 @@
                         <li class="nav-item @(string.Compare("Tags", currentController, StringComparison.OrdinalIgnoreCase) == 0 ? "active" : null)">
                             <a asp-controller="Tags" asp-action="Index" class="nav-link">
                                 <span class="icon-price-tag"></span>
-                                <strong>Tags</strong>
+                                <strong>标签</strong>
                             </a>
                         </li>
 
                         <li class="nav-item @(string.Compare("Archive", currentController, StringComparison.OrdinalIgnoreCase) == 0 ? "active" : null)">
                             <a asp-controller="Archive" asp-action="Index" class="nav-link">
                                 <span class="icon-folder"></span>
-                                <strong>Archive</strong>
+                                <strong>归档</strong>
                             </a>
                         </li>
                         <li class="nav-item @(string.Compare("about", customPageRouteName, StringComparison.OrdinalIgnoreCase) == 0 ? "active" : null)">
                             <a asp-controller="CustomPage" asp-action="Index" asp-route-routeName="about" class="nav-link">
                                 <span class="icon-star-full"></span>
-                                <strong>About</strong>
+                                <strong>关于</strong>
                             </a>
                         </li>
                     </ul>
@@ -107,7 +107,7 @@
                                name="term"
                                maxlength="30">
                         <button class="btn btn-outline-light btn-search my-2 my-sm-0 d-none d-md-block" type="submit"><span class="icon-search"></span></button>
-                        <button class="btn btn-block btn-success d-block d-sm-none mt-1" type="submit"><span class="icon-search"></span> Search</button>
+                        <button class="btn btn-block btn-success d-block d-sm-none mt-1" type="submit"><span class="icon-search"></span> 搜索</button>
                     </form>
                 </div>
             </div>

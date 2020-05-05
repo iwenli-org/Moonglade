@@ -73,7 +73,7 @@
     <input type="hidden" asp-for="IsPublished" />
     <div class="row">
         <div class="col-md-9 col-xl-10">
-            <input type="text" asp-for="Title" class="form-control form-control-lg" placeholder="Title" />
+            <input type="text" asp-for="Title" class="form-control form-control-lg" placeholder="标题" />
             <div>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
@@ -88,7 +88,7 @@
                         </div>
                     </div>
                     <div class="col-2">
-                        <input type="text" asp-for="ContentLanguageCode" class="form-control form-control-sm" placeholder="Language Code" />
+                        <input type="text" asp-for="ContentLanguageCode" class="form-control form-control-sm" placeholder="语言代码" />
                         <div>
                             <span asp-validation-for="ContentLanguageCode" class="text-danger"></span>
                         </div>
@@ -104,7 +104,7 @@
             </div>
 
             <div class="form-group">
-                <input type="text" asp-for="Tags" class="form-control" placeholder="Tags" />
+                <input type="text" asp-for="Tags" class="form-control" placeholder="标签" />
             </div>
         </div>
         <div class="col-md-3 col-xl-2">
@@ -139,12 +139,12 @@
                 @if (Model.PostId != Guid.Empty)
                 {
                     <div class="card-body">
-                        <a class="btn btn-light" data-toggle="modal" data-target="#changePublishDateModal">Change Publish Date</a>
+                        <a class="btn btn-light" data-toggle="modal" data-target="#changePublishDateModal">更改发布日期</a>
                     </div>
                 }
             </div>
             <div class="card">
-                <div class="card-header">Categories</div>
+                <div class="card-header">分类</div>
                 <div class="card-body">
                     @if (null != Model.CategoryList && Model.CategoryList.Count > 0)
                     {
@@ -165,7 +165,7 @@
                     }
                 </div>
                 <div class="card-footer">
-                    <a asp-action="Create" asp-controller="Category" class="btn btn-sm btn-secondary">New Category</a>
+                    <a asp-action="Create" asp-controller="Category" class="btn btn-sm btn-secondary">新增分类</a>
                 </div>
             </div>
         </div>
@@ -175,23 +175,23 @@
 
     <div>
         <button type="submit" class="btn btn-success ediblogeditor-save" id="btn-save">
-            Save
+            保存
         </button>
         @if (!Model.IsPublished)
         {
             <button type="submit" class="btn btn-primary ediblogeditor-publish" id="btn-publish">
-                Publish
+                发布
             </button>
-            <button class="btn btn-outline-success ediblogeditor-preview" id="btn-preview">Preview</button>
+            <button class="btn btn-outline-success ediblogeditor-preview" id="btn-preview">预览</button>
         }
-        <a asp-controller="Post" asp-action="Manage" class="btn btn-light">Cancel</a>
+        <a asp-controller="Post" asp-action="Manage" class="btn btn-light">取消</a>
     </div>
 
     <div class="modal fade" id="changePublishDateModal" tabindex="-1" role="dialog" aria-labelledby="changePublishDateModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="resetModalLabel">Change Publish Date</h5>
+                    <h5 class="modal-title" id="resetModalLabel">更改发布日期</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -211,8 +211,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Continue</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">继续</button>
                 </div>
             </div>
         </div>

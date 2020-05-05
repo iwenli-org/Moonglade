@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moonglade.Configuration.Abstraction;
 using Moonglade.Model;
+using MySql.Data.MySqlClient;
 
 namespace Moonglade.Configuration
 {
@@ -81,7 +82,8 @@ namespace Moonglade.Configuration
             async Task<int> SetConfiguration(string key, string value)
             {
                 var connStr = _configuration.GetConnectionString(Constants.DbConnectionName);
-                await using var conn = new SqlConnection(connStr);
+                //await using var conn = new SqlConnection(connStr);
+                await using var conn = new MySqlConnection(connStr);
                 var sql = $"UPDATE {nameof(BlogConfiguration)} " +
                           $"SET {nameof(BlogConfiguration.CfgValue)} = @value, " +
                           $"{nameof(BlogConfiguration.LastModifiedTimeUtc)} = @lastModifiedTimeUtc " +
@@ -113,7 +115,8 @@ namespace Moonglade.Configuration
             try
             {
                 var connStr = _configuration.GetConnectionString(Constants.DbConnectionName);
-                using var conn = new SqlConnection(connStr);
+                //using var conn = new SqlConnection(connStr);
+                using var conn = new MySqlConnection(connStr);
                 var sql = $"SELECT {nameof(BlogConfiguration.CfgKey)}, " +
                           $"{nameof(BlogConfiguration.CfgValue)} " +
                           $"FROM {nameof(BlogConfiguration)}";

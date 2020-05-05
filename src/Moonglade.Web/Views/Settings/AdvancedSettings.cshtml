@@ -32,7 +32,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="card mb-4">
-                <div class="card-header">Advanced Settings</div>
+                <div class="card-header">高级设置</div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <label asp-for="EnablePingBackSend" class="control-label"></label>
@@ -68,22 +68,22 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    Options
+                    选项
                 </div>
                 <div class="card-body">
-                    <h6>Restart Website</h6>
+                    <h6>重新启动网站</h6>
                     <hr />
 
-                    <div class="alert alert-warning">Try to shutdown and restart the website, this will terminate all current requests.</div>
+                    <div class="alert alert-warning">尝试关闭并重新启动网站，这将终止所有当前请求。</div>
 
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#restartModal">Restart</button>
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#restartModal">重启</button>
 
-                    <h6 class="mt-4">System Reset</h6>
+                    <h6 class="mt-4">系统重置</h6>
                     <hr />
 
-                    <div class="alert alert-warning">Erase all data and configuration.</div>
+                    <div class="alert alert-warning">擦除所有数据和配置。</div>
 
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#resetModal">Reset</button>
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#resetModal">重置</button>
                 </div>
             </div>
         </div>
@@ -98,17 +98,17 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="restartModalLabel">Restart Website</h5>
+                <h5 class="modal-title" id="restartModalLabel">重新启动网站</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure to restart website? All current requests will be terminated.
+                您确定要重新启动网站吗？当前所有请求将被终止。
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger btn-restart">Restart</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger btn-restart">确认</button>
             </div>
         </div>
     </div>
@@ -118,17 +118,17 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="resetModalLabel">System Reset</h5>
+                <h5 class="modal-title" id="resetModalLabel">系统重置</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Are you ABSOLUTELY sure? ALL data and configuration will be erased!
+                您确定所有数据和配置将被删除！
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger btn-reset">Reset</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger btn-reset">确定</button>
             </div>
         </div>
     </div>

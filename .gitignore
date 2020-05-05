@@ -307,3 +307,5 @@ src/Moonglade.Web/wwwroot/ms-icon-144x144.png
 src/Moonglade.Web/wwwroot/ms-icon-150x150.png
 src/Moonglade.Web/wwwroot/ms-icon-310x310.png
 src/Moonglade.Web/wwwroot/ms-icon-70x70.png
+/src/Moonglade.Web/App_Data/logs
+appsettings.Production.json

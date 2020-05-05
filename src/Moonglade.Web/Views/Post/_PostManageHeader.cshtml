@@ -3,26 +3,26 @@
 }
 
 <h3>
-    Posts
+    全部博文
     <a class="btn btn-outline-success float-right" asp-controller="Post" asp-action="Create">
         <span class="icon-plus"></span>
-        New
+        新建
     </a>
 </h3>
 <hr />
 
 <ul class="nav nav-tabs">
     <li role="presentation" class="nav-item nav-item-non-margin">
-        <a class="nav-link @(currentAction == "Manage" ? "active" : null)" asp-controller="Post" asp-action="Manage">Published</a>
+        <a class="nav-link @(currentAction == "Manage" ? "active" : null)" asp-controller="Post" asp-action="Manage">已发表</a>
     </li>
     <li role="presentation" class="nav-item nav-item-non-margin">
-        <a class="nav-link @(currentAction == "Draft" ? "active" : null)" asp-controller="Post" asp-action="Draft">Drafts</a>
+        <a class="nav-link @(currentAction == "Draft" ? "active" : null)" asp-controller="Post" asp-action="Draft">草稿箱</a>
     </li>
     <li role="presentation" class="nav-item nav-item-non-margin">
-        <a class="nav-link @(currentAction == "RecycleBin" ? "active" : null)" asp-controller="Post" asp-action="RecycleBin">Recycle Bin</a>
+        <a class="nav-link @(currentAction == "RecycleBin" ? "active" : null)" asp-controller="Post" asp-action="RecycleBin">回收站</a>
     </li>
     <li role="presentation" class="nav-item nav-item-non-margin">
-        <a class="nav-link @(currentAction == "Insights" ? "active" : null)" asp-controller="Post" asp-action="Insights">Insights</a>
+        <a class="nav-link @(currentAction == "Insights" ? "active" : null)" asp-controller="Post" asp-action="Insights">排行榜</a>
     </li>
 </ul>
 <div class="mb-3"></div>

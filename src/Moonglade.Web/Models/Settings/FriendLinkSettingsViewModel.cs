@@ -12,7 +12,7 @@ namespace Moonglade.Web.Models.Settings
 
     public class FriendLinkSettingsViewModel
     {
-        [Display(Name = "Show Friend Links Section")]
+        [Display(Name = "显示友情链接")]
         public bool ShowFriendLinksSection { get; set; }
     }
 }

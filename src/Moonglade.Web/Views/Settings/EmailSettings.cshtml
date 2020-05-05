@@ -8,7 +8,7 @@
 
 @if (!Settings.Value.Notification.Enabled)
 {
-    <div class="alert alert-warning">Notification is not enabled. Please follow instructions <a href="https://github.com/EdiWang/Moonglade/blob/master/README.md#email-notification" target="_blank">here</a> to setup notification API.</div>
+    <div class="alert alert-warning">通知未启用。请遵循指示 <a href="https://github.com/EdiWang/Moonglade/blob/master/README.md#email-notification" target="_blank">here</a> to setup notification API.</div>
 }
 else
 {
@@ -24,7 +24,7 @@ else
         <div class="row">
             <div class="col-md-6">
                 <div class="card mb-4">
-                    <div class="card-header">Email Options</div>
+                    <div class="card-header">电子邮件选项</div>
                     <div class="card-body">
                         <div class="form-group">
                             <label asp-for="EmailDisplayName" class="control-label"></label>
@@ -45,13 +45,13 @@ else
                     </div>
 
                     <div class="card-footer">
-                        <a href="javascript:sendTestEmail();" id="a-send-test-mail" class="btn btn-sm btn-outline-primary">Send Test Email</a>
+                        <a href="javascript:sendTestEmail();" id="a-send-test-mail" class="btn btn-sm btn-outline-primary">发送测试邮件</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="card mb-4">
-                    <div class="card-header">Notification Options</div>
+                    <div class="card-header">通知选项</div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
                             <label asp-for="EnableEmailSending" class="control-label"></label>

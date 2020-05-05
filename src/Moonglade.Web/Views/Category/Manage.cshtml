@@ -5,10 +5,10 @@
 @model IReadOnlyList<Moonglade.Model.Category>
 
 <h3>
-    Categories
+    分类
     <a class="btn btn-outline-success float-right" asp-controller="Category" asp-action="Create">
         <span class="icon-plus"></span>
-        Create
+        新建
     </a>
 </h3>
 <hr />
@@ -39,8 +39,8 @@ else
             <small class="text-muted">@cat.Name</small>
         </div>
         <div class="card-footer">
-            <a asp-controller="Category" asp-action="Edit" asp-route-id="@cat.Id" class="btn btn-sm btn-primary">Edit</a>
-            <a asp-controller="Category" asp-action="Delete" asp-route-id="@cat.Id" class="btn btn-sm btn-danger">Delete</a>
+            <a asp-controller="Category" asp-action="Edit" asp-route-id="@cat.Id" class="btn btn-sm btn-primary">编辑</a>
+            <a asp-controller="Category" asp-action="Delete" asp-route-id="@cat.Id" class="btn btn-sm btn-danger">删除</a>
         </div>
     </div>
     }

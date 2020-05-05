@@ -5,11 +5,11 @@
 @model Moonglade.Web.Models.CategoryEditViewModel
 
 <h3>
-    Delete Category
+    删除分类
 </h3>
 <hr />
 
-<div class="alert alert-warning">Are you sure you want to delete this category?</div>
+<div class="alert alert-warning">您确定要删除此分类吗?</div>
 
 <table class="table table-bordered">
     <tr>
@@ -42,7 +42,7 @@
     <input type="hidden" asp-for="Id" />
 
     <div class="form-actions no-color">
-        <input type="submit" value="Delete" class="btn btn-danger" />
-        <a asp-action="Manage" class="btn btn-secondary">Cancel</a>
+        <input type="submit" value="删除" class="btn btn-danger" />
+        <a asp-action="Manage" class="btn btn-secondary">取消</a>
     </div>
 </form>

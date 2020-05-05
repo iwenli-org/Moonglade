@@ -178,14 +178,14 @@ var postEditor = {
 };
 
 var sendTestEmail = function () {
-    $('#a-send-test-mail').text('Sending...');
+    $('#a-send-test-mail').text('正在发送...');
     $('#a-send-test-mail').addClass('disabled');
     $('#a-send-test-mail').attr('disabled', 'disabled');
 
     $.post('/admin/settings/send-test-email',
         function (data) {
             if (data.isSuccess) {
-                window.toastr.success('Email is sent.');
+                window.toastr.success('测试邮件已发送.');
             } else {
                 window.toastr.error(data.message);
             }
@@ -195,7 +195,7 @@ var sendTestEmail = function () {
             window.toastr.error(responseJson.message);
         })
         .always(function () {
-            $('#a-send-test-mail').text('Send Test Email');
+            $('#a-send-test-mail').text('发送测试邮件');
             $('#a-send-test-mail').removeClass('disabled');
             $('#a-send-test-mail').removeAttr('disabled');
         });

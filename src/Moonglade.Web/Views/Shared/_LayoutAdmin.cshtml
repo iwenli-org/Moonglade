@@ -54,31 +54,31 @@
                     <div class="list-group list-group-flush">
                         <a asp-controller="Post" asp-action="Manage" class="list-group-item list-group-item-action @(currentController == "Post" ? "active" : null)">
                             <span class="icon-file-text2"></span>
-                            Posts
+                            博文管理
                         </a>
                         <a asp-controller="Category" asp-action="Manage" class="list-group-item list-group-item-action @(currentController == "Category" ? "active" : null)">
                             <span class="icon-folder"></span>
-                            Categories
+                            分类管理
                         </a>
                         <a asp-controller="Comment" asp-action="Manage" class="list-group-item list-group-item-action @(currentController == "Comment" ? "active" : null)">
                             <span class="icon-bubbles3"></span>
-                            Comments
+                            评论管理
                         </a>
                         <a asp-controller="Tags" asp-action="Manage" class="list-group-item list-group-item-action @(currentController == "Tags" ? "active" : null)">
                             <span class="icon-price-tag"></span>
-                            Tags
+                            标签管理
                         </a>
                         <a asp-controller="CustomPage" asp-action="Manage" class="list-group-item list-group-item-action @(currentController == "CustomPage" ? "active" : null)">
                             <span class="icon-file-text2"></span>
-                            Pages
+                            页面管理
                         </a>
                         <a asp-controller="Pingback" asp-action="Manage" class="list-group-item list-group-item-action @(currentController == "Pingback" ? "active" : null)">
                             <span class="icon-earth"></span>
-                            Pingbacks
+                            引用博文
                         </a>
                         <a asp-controller="Settings" asp-action="GeneralSettings" class="list-group-item list-group-item-action @(currentController == "Settings" ? "active" : null)">
                             <span class="icon-cog"></span>
-                            Settings
+                            配置中心
                         </a>
                     </div>
                 </section>
@@ -87,10 +87,10 @@
 
                 <div class="text-center mt-3">
                     <a href="/" class="btn btn-sm btn-success">
-                        Back to Website
+                        主页
                     </a>
                     <a asp-controller="Admin" asp-action="SignOut" class="btn btn-sm btn-danger">
-                        Sign Out
+                        退出
                     </a>
                 </div>
                 <p class="text-moonglade-dark-secondary mt-4 small text-center">

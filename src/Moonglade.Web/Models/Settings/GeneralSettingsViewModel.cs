@@ -18,34 +18,34 @@ namespace Moonglade.Web.Models.Settings
         public string MetaDescription { get; set; }
 
         [Required]
-        [Display(Name = "Logo Text")]
+        [Display(Name = "Logo 文本")]
         [MaxLength(16)]
         public string LogoText { get; set; }
 
         [Required]
-        [RegularExpression(@"[a-zA-Z0-9\s.\-\[\]]+", ErrorMessage = "Only letters, numbers, - and [] are allowed.")]
-        [Display(Name = "Copyright")]
+        [RegularExpression(@"[a-zA-Z0-9\s.\-\[\]]+", ErrorMessage = "仅允许使用字母，数字，-和[]")]
+        [Display(Name = "版权")]
         [MaxLength(64)]
         public string Copyright { get; set; }
 
         [Required]
-        [Display(Name = "Blog Title")]
+        [Display(Name = "博客站点标题")]
         [MaxLength(16)]
         public string SiteTitle { get; set; }
 
         [Required]
-        [Display(Name = "Blogger Name")]
+        [Display(Name = "作者名称")]
         [MaxLength(32)]
         public string BloggerName { get; set; }
 
         [Required]
-        [Display(Name = "Blogger Description")]
+        [Display(Name = "作者描述")]
         [DataType(DataType.MultilineText)]
         [MaxLength(256)]
         public string BloggerDescription { get; set; }
 
         [Required]
-        [Display(Name = "Blogger Short Description")]
+        [Display(Name = "作者简介")]
         [MaxLength(32)]
         public string BloggerShortDescription { get; set; }
 

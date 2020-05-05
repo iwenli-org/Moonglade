@@ -108,12 +108,12 @@
                 }
 
                 if (!file.type.match('image.*')) {
-                    toastr.error('Please select an image file.');
+                    toastr.error('请选择一个图像文件.');
                 }
 
                 resizeImage(file);
             } else {
-                toastr.error('The File APIs are not fully supported in this browser.');
+                toastr.error('此浏览器不完全支持文件API.');
             }
         }
         document.getElementById('avatarImageFile').addEventListener('change', fileSelect, false);
@@ -144,7 +144,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="card mb-3">
-                <div class="card-header">Website</div>
+                <div class="card-header">站点</div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
