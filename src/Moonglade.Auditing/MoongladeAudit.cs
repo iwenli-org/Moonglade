@@ -62,7 +62,9 @@ namespace Moonglade.Auditing
                 //await using var conn = new SqlConnection(connStr);
                 await using var conn = new MySqlConnection(connStr);
 
-                var sql = @"INSERT INTO AuditLog([EventId],[EventType],[EventTimeUtc],[WebUsername],[IpAddressV4],[MachineName],[Message])
+                //var sql = @"INSERT INTO AuditLog([EventId],[EventType],[EventTimeUtc],[WebUsername],[IpAddressV4],[MachineName],[Message])
+                //            VALUES(@EventId, @EventType, @EventTimeUtc, @Username, @IpAddressV4, @MachineName, @Message)";
+                var sql = @"INSERT INTO AuditLog(EventId,EventType,EventTimeUtc,WebUsername,IpAddressV4,MachineName,Message)
                             VALUES(@EventId, @EventType, @EventTimeUtc, @Username, @IpAddressV4, @MachineName, @Message)";
 
                 int rows = await conn.ExecuteAsync(sql, auditEntry);
