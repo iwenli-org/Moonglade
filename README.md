@@ -2,7 +2,7 @@
 
 [![Build Status](https://dev.azure.com/ediwang/Edi-GitHub/_apis/build/status/EdiWang.Moonglade?branchName=master)](https://dev.azure.com/ediwang/Edi-GitHub/_build/latest?definitionId=68&branchName=master)
 
-The blog system for https://edi.wang. Written in [**.NET Core**](https://dotnet.microsoft.com/) and runs on [**Microsoft Azure**](https://azure.microsoft.com/en-us/).
+The [**.NET Core**](https://dotnet.microsoft.com/) blog system of [**edi.wang**](https://edi.wang) that runs on [**Microsoft Azure**](https://azure.microsoft.com/en-us/)
 
 ![image](https://blog.ediwangcdn.com/web-assets/ediwang-azure-arch-v2.png)
 
@@ -20,7 +20,7 @@ Tools | Alternative
 [Visual Studio 2019](https://visualstudio.microsoft.com/) | [Visual Studio Code](https://code.visualstudio.com/)
 [Azure SQL Database](https://azure.microsoft.com/en-us/services/sql-database/) | [SQL Server 2019](https://www.microsoft.com/en-us/sql-server/sql-server-2019) / LocalDB (Dev Only)
 
-### Setup Database
+###  Setup Database
 
 Development | Production 
 --- | ---
@@ -32,10 +32,10 @@ Update the ```MoongladeDatabase``` as your database connection string in **appse
 *If you are deploying to Azure App Service, you can set the connection string in the Configuration blade.*
 
 ```json
-"MoongladeDatabase": "Server=(localdb)\\MSSQLLocalDB;Database=moonglade-dev;Trusted_Connection=True;"
+"MoongladeDatabase": "Server=(localdb)\\MSSQLLocalDB;Database=moonglade;Trusted_Connection=True;"
 ```
 
-### Build Source
+### 🔨 Build Source
 
 Build and run ```./src/Moonglade.sln```
 - Default Admin Username: ```admin```
@@ -45,13 +45,14 @@ Build and run ```./src/Moonglade.sln```
 
 > Below section discuss system settings in **appsettings.[env].json**. For blog settings, please use "/admin/settings" UI.
 
-### Authentication
+**For production, it is strongly recommended to use Environment Variables over appsetting.json file.**
 
-#### Preferred: [Azure Active Directory]((https://azure.microsoft.com/en-us/services/active-directory/))
+### 🛡 Authentication
 
-Register an App in **Azure Active Directory**
-- Set Redirection URI to **"https://yourdomain/signin-oidc"**
-  - For local debugging, add URL to https://localhost:1055/signin-oidc
+#### [Azure Active Directory]((https://azure.microsoft.com/en-us/services/active-directory/)) (Preferred)
+
+- Register an App in **Azure Active Directory**
+- Set Redirection URI to **"https://yourdomain/signin-oidc"** (For local debugging, also add URL to https://localhost:1055/signin-oidc)
 - Check `ID Tokens` checkbox under 'Advanced settings'.
 - Copy ```appId``` to set as ```AzureAd:ClientId``` in **appsettings.[env].json** file
 
@@ -66,23 +67,23 @@ Register an App in **Azure Active Directory**
 }
 ```
 
-#### Alternative: Local Account
+#### Local Account (Alternative)
 
 Set ```Authentication:Provider``` to ```"Local"``` and assign a pair of username and password. 
 
-*Currently password is not encrypted, use it at your own risk.*
+*Password is not encrypted, use it at your own risk.*
 
 ```json
 "Authentication": {
   "Provider": "Local",
   "Local": {
-    "Username": "{YOUR-VALUE}",
-    "Password": "{YOUR-VALUE}",
+    "Username": "admin",
+    "Password": "admin123",
   }
 }
 ```
 
-### Image Storage
+### 🖼 Image Storage
 ```AppSettings:ImageStorage``` controls how blog post images are stored.
 
 #### [Azure Blob Storage](https://azure.microsoft.com/en-us/services/storage/blobs/) (Preferred)
@@ -97,7 +98,7 @@ You need to create an [**Azure Blob Storage**](https://azure.microsoft.com/en-us
 }
 ```
 
-#### File System (Alternative)
+#### 📂 File System (Alternative)
 
 ```json
 "Provider": "filesystem",
@@ -107,7 +108,7 @@ You need to create an [**Azure Blob Storage**](https://azure.microsoft.com/en-us
 ```
 The ```Path``` can be relative or absolute. ```"$\{basedir\}"``` represents the website's current directory. Storing images files under website directory is **NOT** recommended. 
 
-#### CDN
+#### ☁ CDN
 
 If ```GetImageByCDNRedirect``` is set to ```true```, the blog will get images from client browser using a 302 redirect. This is especially useful when you have a CDN for your image resources, like what I did on Azure. 
 
@@ -118,11 +119,9 @@ If ```GetImageByCDNRedirect``` is set to ```true```, the blog will get images fr
 }
 ```
 
-### Email Notification
+### 📧 Email Notification
 
 If you need email notification for new comments, new replies and pingbacks, you have to setup the Moonglade.Notification API first. See https://github.com/EdiWang/Moonglade.Notification for instructions.
-
-Update AppSettings
 
 ```json
 "Notification": {
@@ -132,7 +131,7 @@ Update AppSettings
 }
 ```
 
-### System Setttings
+### 🖥 System Setttings
 
 Key | Data Type | Description
 --- | --- | ---
@@ -145,45 +144,9 @@ EnforceHttps | ```bool``` | Force website use HTTPS
 AllowScriptsInCustomPage | ```bool``` | Allow JavaScript in Page content or not
 EnableAudit | ```bool``` | Enable Audit Log or not
 EnablePostRawEndpoint | ```bool``` | Enable ```/meta``` and ```/content``` endpoint for post URL
-AutoDarkLightTheme | ```bool``` | Automatically switch light or dark theme on post reading screen
 
 ## 🙄 FAQ
 
 ### Does this blog coupled with Microsoft Azure?
 
 No, the system design does not couple with Azure, but the blog works best on Azure. Every part of the system, like Authentication and Image Storage, can be configured to use non-Azure options.
-
-## 🎁 Related Projects
-
-> Below open source projects are reusable components (NuGet packages) used in my blog, and they can be used in other websites as well. 
-
-Repository | Nuget
---- | ---
-[Edi.Blog.Pingback](https://github.com/EdiWang/Edi.Blog.Pingback) | [![NuGet][main-nuget-badge-1]][main-nuget-1]
-[Edi.Captcha.AspNetCore](https://github.com/EdiWang/Edi.Captcha.AspNetCore) | [![NuGet][main-nuget-badge-3]][main-nuget-3]
-[Edi.ImageWatermark](https://github.com/EdiWang/Edi.ImageWatermark) | [![NuGet][main-nuget-badge-4]][main-nuget-4]
-[Edi.Net.AesEncryption](https://github.com/EdiWang/Edi.Net.AesEncryption) | [![NuGet][main-nuget-badge-5]][main-nuget-5]
-[Edi.Practice.RequestResponseModel](https://github.com/EdiWang/Edi.Practice.RequestResponseModel) | [![NuGet][main-nuget-badge-6]][main-nuget-6]
-[Edi.TemplateEmail](https://github.com/EdiWang/Edi.TemplateEmail) | [![NuGet][main-nuget-badge-8]][main-nuget-8]
-[Edi.WordFilter](https://github.com/EdiWang/Edi.WordFilter) | [![NuGet][main-nuget-badge-9]][main-nuget-9]
-
-[main-nuget-1]: https://www.nuget.org/packages/Edi.Blog.Pingback/
-[main-nuget-badge-1]: https://img.shields.io/nuget/v/Edi.Blog.Pingback.svg?style=flat-square&label=nuget
-
-[main-nuget-3]: https://www.nuget.org/packages/Edi.Captcha/
-[main-nuget-badge-3]: https://img.shields.io/nuget/v/Edi.Captcha.svg?style=flat-square&label=nuget
-
-[main-nuget-4]: https://www.nuget.org/packages/Edi.ImageWatermark/
-[main-nuget-badge-4]: https://img.shields.io/nuget/v/Edi.ImageWatermark.svg?style=flat-square&label=nuget
-
-[main-nuget-5]: https://www.nuget.org/packages/Edi.Net.AesEncryption/
-[main-nuget-badge-5]: https://img.shields.io/nuget/v/Edi.Net.AesEncryption.svg?style=flat-square&label=nuget
-
-[main-nuget-6]: https://www.nuget.org/packages/Edi.Practice.RequestResponseModel/
-[main-nuget-badge-6]: https://img.shields.io/nuget/v/Edi.Practice.RequestResponseModel.svg?style=flat-square&label=nuget
-
-[main-nuget-8]: https://www.nuget.org/packages/Edi.TemplateEmail/
-[main-nuget-badge-8]: https://img.shields.io/nuget/v/Edi.TemplateEmail.svg?style=flat-square&label=nuget
-
-[main-nuget-9]: https://www.nuget.org/packages/Edi.WordFilter/
-[main-nuget-badge-9]: https://img.shields.io/nuget/v/Edi.WordFilter.svg?style=flat-square&label=nuget

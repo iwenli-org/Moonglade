@@ -36,18 +36,18 @@ namespace Moonglade.Web.Models.Settings
         [Required]
         [Display(Name = "作者名称")]
         [MaxLength(32)]
-        public string BloggerName { get; set; }
+        public string OwnerName { get; set; }
 
         [Required]
         [Display(Name = "作者描述")]
         [DataType(DataType.MultilineText)]
         [MaxLength(256)]
-        public string BloggerDescription { get; set; }
+        public string OwnerDescription { get; set; }
 
         [Required]
         [Display(Name = "作者简介")]
         [MaxLength(32)]
-        public string BloggerShortDescription { get; set; }
+        public string OwnerShortDescription { get; set; }
 
         [Display(Name = "Side Bar Pitch (HTML)")]
         [DataType(DataType.MultilineText)]
@@ -65,6 +65,9 @@ namespace Moonglade.Web.Models.Settings
         public string SelectedTimeZoneId { get; set; }
 
         public List<SelectListItem> TimeZoneList { get; set; }
+        
+        [Display(Name = "Auto Light / Dark theme regarding client system settings")]
+        public bool AutoDarkLightTheme { get; set; }
 
         [MaxLength(32)]
         public string SelectedThemeFileName { get; set; }

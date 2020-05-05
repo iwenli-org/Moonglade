@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using AspNetCoreRateLimit;
-using Edi.Blog.Pingback;
 using Edi.Captcha;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
@@ -33,12 +32,13 @@ using Moonglade.ImageStorage;
 using Moonglade.Model;
 using Moonglade.Model.Settings;
 using Moonglade.OpmlFileWriter;
+using Moonglade.Pingback;
 using Moonglade.Setup;
 using Moonglade.Web.Authentication;
 using Moonglade.Web.Extensions;
-using Moonglade.Web.FaviconGenerator;
 using Moonglade.Web.Filters;
 using Moonglade.Web.Middleware.PoweredBy;
+using Moonglade.Web.SiteIconGenerator;
 using Polly;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
@@ -98,7 +98,8 @@ namespace Moonglade.Web
             services.AddSingleton<IBlogConfig, BlogConfig>();
             services.AddScoped<IMoongladeAudit, MoongladeAudit>();
             services.AddScoped<DeleteSubscriptionCache>();
-            services.AddScoped<IHtmlCodec, HtmlEncoding.HtmlCodec>();
+            services.AddScoped<IHtmlCodec, HtmlCodec>();
+            services.AddScoped<ISiteIconGenerator, FileSystemSiteIconGenerator>();
             services.AddScoped<IDateTimeResolver>(c =>
                 new DateTimeResolver(c.GetService<IBlogConfig>().GeneralSettings.TimeZoneUtcOffset));
 
@@ -165,7 +166,6 @@ namespace Moonglade.Web
             });
 
             PrepareRuntimePathDependencies(app, _environment);
-            GenerateFavicons(_environment);
 
             var enforceHttps = bool.Parse(_appSettingsSection["EnforceHttps"]);
 
@@ -295,24 +295,6 @@ namespace Moonglade.Web
         }
 
         #region Private Helpers
-
-        private void GenerateFavicons(IHostEnvironment env)
-        {
-            try
-            {
-                IFaviconGenerator faviconGenerator = new FileSystemFaviconGenerator();
-                var userDefinedIconFile = Path.Join(env.ContentRootPath, "wwwroot", "appicon.png");
-                if (File.Exists(userDefinedIconFile))
-                {
-                    faviconGenerator.GenerateIcons(userDefinedIconFile,
-                        Path.Join(AppDomain.CurrentDomain.GetData(Constants.DataDirectory).ToString(), "favicons"));
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Error generating favicons.");
-            }
-        }
 
         private void PrepareRuntimePathDependencies(IApplicationBuilder app, IHostEnvironment env)
         {

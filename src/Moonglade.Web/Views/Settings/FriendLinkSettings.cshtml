@@ -1,0 +1,185 @@
+﻿@{
+    Layout = "_LayoutAdmin";
+}
+
+@model FriendLinkSettingsViewModelWrap
+
+@section scripts{
+    <script>
+        $(function () {
+            $(".btn-delete").click(function () {
+                var cfm = confirm("Delete Confirmation?");
+                if (cfm) {
+                    deleteFriendLink($(this).data("friendlinkid"));
+                }
+            });
+
+            $(".btn-edit").click(function () {
+                editFriendLink($(this).data("friendlinkid"));
+            });
+        });
+
+        function deleteFriendLink(friendlinkid) {
+            $(`#span-processing-${friendlinkid}`).show();
+            ajaxPostWithCSRFToken("friendlink/delete", { id: friendlinkid }, function (data) {
+                $(`#tr-${data}`).hide();
+            });
+        }
+
+        function initCreateFriendLink() {
+            $("#FriendLinkEditViewModel_Id").val(emptyGuid);
+            $("#edit-form")[0].reset();
+            $('#editFriendlinkModal').modal();
+        }
+
+        function editFriendLink(id) {
+            $.get(`friendlink/edit/${id}`, function (data) {
+                $("#FriendLinkEditViewModel_Id").val(data.id);
+                $("#FriendLinkEditViewModel_Title").val(data.title);
+                $("#FriendLinkEditViewModel_LinkUrl").val(data.linkUrl);
+                $("#editFriendlinkModal").modal();
+            });
+        }
+
+        $(".btn-submit").click(function () {
+            if ($("#edit-form").valid()) {
+                var action = '';
+                var friendlinkId = $("#FriendLinkEditViewModel_Id").val();
+                if (friendlinkId == emptyGuid) {
+                    action = "create";
+                }
+                else {
+                    action = "edit";
+                }
+
+                ajaxPostWithCSRFToken(`friendlink/${action}`,
+                    {
+                        "Id": $("#FriendLinkEditViewModel_Id").val(),
+                        "Title": $("#FriendLinkEditViewModel_Title").val(),
+                        "LinkUrl": $("#FriendLinkEditViewModel_LinkUrl").val()
+                    },
+                    function (data) {
+                        $("#edit-form")[0].reset();
+                        $("#editFriendlinkModal").modal('hide');
+                        window.location.reload();
+                    });
+            }
+        });
+    </script>
+}
+
+<partial name="_SettingsHeader" />
+
+<form id="form-settings" asp-controller="Settings" asp-action="FriendLinkSettings"
+      data-ajax-begin="onUpdateSettingsBegin"
+      data-ajax-complete="onUpdateSettingsComplete"
+      data-ajax-failure="onUpdateSettingsFailed"
+      data-ajax-success="onUpdateSettingsSuccess"
+      data-ajax="true"
+      data-ajax-method="POST">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">Friend Link Options</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <label asp-for="FriendLinkSettingsViewModel.ShowFriendLinksSection" class="control-label"></label>
+                        <div class="material-switch float-right">
+                            <input @(Model.FriendLinkSettingsViewModel.ShowFriendLinksSection ? "checked=\"checked\"" : "") id="ShowFriendLinksSection" name="ShowFriendLinksSection" type="checkbox" value="true">
+                            <label for="ShowFriendLinksSection" class="label-success"></label>
+                            <input name="ShowFriendLinksSection" type="hidden" value="false">
+                        </div>
+                    </li>
+                </ul>
+                <div class="card-footer">
+                    <input id="btn-save-settings" type="submit" value="Save" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="mb-2">
+    <a class="btn btn-outline-success" href="javascript:initCreateFriendLink();">
+        <span class="icon-plus"></span>
+        New
+    </a>
+</div>
+
+@if (null != ViewBag.IsServerError && ViewBag.IsServerError)
+{
+    <partial name="_ServerErrorMessage" />
+}
+else
+{
+    @Html.AntiForgeryToken()
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Link
+                </th>
+                <th class="table-item-w20">
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.FriendLinks.OrderBy(m => m.Title))
+            {
+                <tr id="tr-@item.Id">
+                    <td>
+                        @item.Title
+                    </td>
+                    <td>
+                        @item.LinkUrl
+                    </td>
+                    <td>
+                        <a href="javascript:;" data-friendlinkid="@item.Id" class="btn btn-sm btn-primary btn-edit"><span class="icon-pencil"></span></a>
+                        <a href="javascript:;" data-friendlinkid="@item.Id" class="btn btn-sm btn-danger btn-delete"><span class="icon-bin"></span></a>
+                        <span id="span-processing-@item.Id" style="display: none">...</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div class="modal fade" id="editFriendlinkModal" tabindex="-1" role="dialog" aria-labelledby="editFriendlinkModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editFriendlinkModalLabel">Friend Link Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form id="edit-form" method="post">
+                <div class="modal-body">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <input type="hidden" asp-for="FriendLinkEditViewModel.Id" />
+                    <div class="form-group">
+                        <label asp-for="FriendLinkEditViewModel.Title" class="control-label"></label>
+                        <input asp-for="FriendLinkEditViewModel.Title" class="form-control" />
+                        <span asp-validation-for="FriendLinkEditViewModel.Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FriendLinkEditViewModel.LinkUrl" class="control-label"></label>
+                        <input asp-for="FriendLinkEditViewModel.LinkUrl" class="form-control" />
+                        <span asp-validation-for="FriendLinkEditViewModel.LinkUrl" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success btn-submit">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
