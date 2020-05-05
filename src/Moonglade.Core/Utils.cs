@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Edi.Practice.RequestResponseModel;
 using Markdig;
+using Castle.DynamicProxy.Generators;
 
 namespace Moonglade.Core
 {
@@ -65,7 +66,7 @@ namespace Moonglade.Core
 
                 return false;
             }
-            
+
             string invalidReturn = "#";
             if (string.IsNullOrWhiteSpace(rawUrl))
             {
@@ -76,7 +77,7 @@ namespace Moonglade.Core
             {
                 return IsUnderLocalSlash() ? rawUrl : invalidReturn;
             }
-            
+
             var uri = new Uri(rawUrl);
             if (uri.IsLoopback)
             {
@@ -179,17 +180,20 @@ namespace Moonglade.Core
                 throw new ArgumentNullException(nameof(path));
             }
 
-            const string basedirStr = "${basedir}"; // Do not use "." because there could be "." in path.
-            if (path.IndexOf(basedirStr, StringComparison.Ordinal) > 0)
-            {
-                throw new NotSupportedException($"{basedirStr} can only be at the beginning.");
-            }
-            if (path.IndexOf(basedirStr, StringComparison.Ordinal) == 0)
-            {
-                // Use relative path
-                // Warning: Write data under application directory may blow up on Azure App Services when WEBSITE_RUN_FROM_PACKAGE = 1, which set the directory read-only.
-                path = path.Replace(basedirStr, contentRootPath);
-            }
+            var paths = new List<string>() { contentRootPath };
+            paths.AddRange(path.Split(new char[] { '/', '\\' }));
+            path = Path.Join(paths.ToArray());
+            //const string basedirStr = "${basedir}"; // Do not use "." because there could be "." in path.
+            //if (path.IndexOf(basedirStr, StringComparison.Ordinal) > 0)
+            //{
+            //    throw new NotSupportedException($"{basedirStr} can only be at the beginning.");
+            //}
+            //if (path.IndexOf(basedirStr, StringComparison.Ordinal) == 0)
+            //{
+            //    // Use relative path
+            //    // Warning: Write data under application directory may blow up on Azure App Services when WEBSITE_RUN_FROM_PACKAGE = 1, which set the directory read-only.
+            //    path = path.Replace(basedirStr, contentRootPath);
+            //}
 
             // IsPathFullyQualified can't check if path is valid, e.g.:
             // Path: C:\Documents<>|foo
