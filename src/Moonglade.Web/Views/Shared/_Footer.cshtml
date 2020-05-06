@@ -1,4 +1,5 @@
 ﻿@using Moonglade.Core
+@using System.Runtime.InteropServices
 
 <footer id="moonglade-footer" class="bg-moonglade-accent2">
     <div class="container">
@@ -9,9 +10,12 @@
                     @Html.Raw(Utils.FormatCopyright2Html(BlogConfig.GeneralSettings.Copyright))
                 </div>
                 <small>
-                    <a href="https://moonglade.blog" target="_blank">Moonglade</a> @Utils.AppVersion / .NET Core @Environment.Version
+                    <a href="https://moonglade.blog" target="_blank">Moonglade</a> @Utils.AppVersion / @RuntimeInformation.FrameworkDescription @(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") is object ? " on Docker" : "")
                     <br />
-                    Developed by <a href="https://edi.wang" target="_blank">Edi Wang</a>
+                    <a href="http://www.beian.miit.gov.cn/publish/query/indexFirst.action" target="_blank">
+                        <span class="icon-earth"></span>
+                        京ICP备18026310号-1
+                    </a>
                 </small>
             </div>
 
