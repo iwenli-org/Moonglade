@@ -1,7 +1,11 @@
 ﻿@using System.Diagnostics
 @using Moonglade.Model
+@using System.Runtime.InteropServices
+@using System.IO
+@using System.Diagnostics
 @{
     Layout = "_LayoutAdmin";
+    var process = Process.GetCurrentProcess();
 }
 
 <partial name="_SettingsHeader" />
@@ -21,6 +25,29 @@
             <tr>
                 <td>System</td>
                 <td>@System.Runtime.InteropServices.RuntimeInformation.OSDescription</td>
+            </tr>
+            <tr>
+                <td>Containerized</td>
+                <td>@(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") is object ? "true" : "false")</td>
+            </tr>
+            <tr>
+                <td>CPU cores</td>
+                <td>@Environment.ProcessorCount</td>
+            </tr>
+            @if (RuntimeInformation.OSDescription.StartsWith("Linux") && Directory.Exists("/sys/fs/cgroup/memory"))
+    {
+            <tr>
+                <td>cgroup memory usage</td>
+                <td>@System.IO.File.ReadAllLines("/sys/fs/cgroup/memory/memory.usage_in_bytes")[0]</td>
+            </tr>
+    }
+            <tr>
+                <td>Memory, current usage (bytes)</td>
+                <td>@process.WorkingSet64</td>
+            </tr>
+            <tr>
+                <td>Memory, max available (bytes)</td>
+                <td>@process.MaxWorkingSet</td>
             </tr>
             <tr>
                 <td>Directory</td>
