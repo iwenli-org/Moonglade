@@ -96,12 +96,12 @@
       ]
     },
     {
-      "provider": "unpkg",
+      //"provider": "unpkg",
       "library": "jquery-validation-unobtrusive@3.2.11",
       "destination": "wwwroot/lib/jquery-validation-unobtrusive/",
       "files": [
-        "dist/jquery.validate.unobtrusive.js",
-        "dist/jquery.validate.unobtrusive.min.js"
+        "jquery.validate.unobtrusive.js",
+        "jquery.validate.unobtrusive.min.js"
       ]
     },
     {
