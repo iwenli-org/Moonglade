@@ -115,7 +115,7 @@ namespace Moonglade.Core
                 return string.Empty;
             }
 
-            return CultureInfo.GetCultureInfo("en-US").DateTimeFormat.GetMonthName(number);
+            return CultureInfo.GetCultureInfo("zh-CN").DateTimeFormat.GetMonthName(number);
         }
 
         public static string FormatCopyright2Html(string copyrightCode)
@@ -400,7 +400,7 @@ namespace Moonglade.Core
             // Regex performance best practice
             // See https://docs.microsoft.com/en-us/dotnet/standard/base-types/best-practices
 
-            const string pattern = @"^[a-zA-Z 0-9\.\-\+\#\s]*$";
+            const string pattern = @"^[a-zA-Z 0-9\.\-\+\#\s\u4e00-\u9fa5]*$";
             return Regex.IsMatch(tagDisplayName, pattern);
         }
 

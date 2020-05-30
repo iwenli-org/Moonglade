@@ -89,7 +89,7 @@ namespace Moonglade.Pingback
                         // request.Timeout = 10000;
                         request.ContentType = "text/xml";
                         request.ProtocolVersion = HttpVersion.Version11;
-                        request.Headers["Accept-Language"] = "en-us";
+                        request.Headers["Accept-Language"] = "zh-cn";
                         AddXmlToRequest(sourceUrl, targetUrl, request);
                         var response2 = (HttpWebResponse)request.GetResponse();
                         response2.Close();
