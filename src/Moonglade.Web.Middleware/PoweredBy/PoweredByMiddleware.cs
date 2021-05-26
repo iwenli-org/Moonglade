@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
 namespace Moonglade.Web.Middleware.PoweredBy
@@ -12,10 +14,15 @@ namespace Moonglade.Web.Middleware.PoweredBy
             _next = next;
         }
 
-        public Task Invoke(HttpContext httpContext)
+        public Task Invoke(HttpContext context)
         {
-            httpContext.Response.Headers["X-Powered-By"] = "Moonglade";
-            return _next.Invoke(httpContext);
+            var headers = context.Request.Headers;
+            context.Response.Headers["X-Powered-By"] = "Moonglade";
+            if (headers.ContainsKey("X-Forwarded-For"))
+            {
+                context.Connection.RemoteIpAddress = IPAddress.Parse(headers["X-Forwarded-For"].ToString().Split(',', StringSplitOptions.RemoveEmptyEntries)[0]);
+            }
+            return _next.Invoke(context);
         }
     }
 }

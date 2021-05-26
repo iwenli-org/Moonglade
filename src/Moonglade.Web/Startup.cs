@@ -10,6 +10,7 @@ using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Rewrite;
@@ -119,6 +120,12 @@ namespace Moonglade.Web
                 }
             }
 
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
+
             services.AddHttpClient<IMoongladeNotificationClient, NotificationClient>()
                     .AddTransientHttpErrorPolicy(builder =>
                             builder.WaitAndRetryAsync(3, retryCount =>
@@ -168,6 +175,9 @@ namespace Moonglade.Web
             PrepareRuntimePathDependencies(app, _environment);
 
             var enforceHttps = bool.Parse(_appSettingsSection["EnforceHttps"]);
+            // using Microsoft.AspNetCore.HttpOverrides;
+
+            app.UseForwardedHeaders();
 
             app.UseSecurityHeaders(new HeaderPolicyCollection()
                 .AddFrameOptionsSameOrigin()
